@@ -45,10 +45,6 @@ class Dealer:
     def __str__(self):
         return 'Dealer'
 
-    def hit(self, card):
-        # deal an individual card
-        self.hand.append(card)
-
 
 class Player:
     def __init__(self, name):
@@ -58,8 +54,9 @@ class Player:
     def __str__(self):
         return self.name
 
-    def hit(self, card):
-        self.hand.append(card)
+    def choice(self):
+        choice = input('Would you like to (h)it or (s)tay? ')
+        return choice
 
 
 class Game:
@@ -68,13 +65,37 @@ class Game:
         self.dealer = Dealer()
         self.deck = Deck(suits, ranks)
         self.deck.shuffle()
+        self.deal_card(self.player)
+        self.deal_card(self.dealer)
+        self.deal_card(self.player)
+        self.deal_card(self.dealer)
+        self.show_cards()
 
     def get_player_name(self):
         name = input('What is your name? ')
         return name
 
+    def deal_card(self, person):
+        card = self.deck.cards.pop()
+        person.hand.append(card)
+
+    def show_cards(self):
+        print(f'{self.player} has:')
+        for card in self.player.hand:
+            print(card)
+        print('Dealer has: ')
+        for card in self.dealer.hand:
+            print(card)
+
+    def player_hand(self):
+        choice = self.player.choice()
+        if choice == 'h':
+            self.deal_card(self.player)
+
 
 # deck_of_cards = [Card(suit, rank) for suit in SUITS for rank in RANKS]
 # the list comprehension above does the same thing as the loop below
 new_game = Game(MY_SUITS, MY_RANKS)
-print(new_game.__dict__)
+# this is how we instantiate the class - calls the __init__ method of the class
+new_game.player_hand()
+new_game.show_cards()
